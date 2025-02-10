@@ -1,8 +1,8 @@
 from requests import Response
 
-from swagger_coverage_py.configs import API_DOCS_TYPE, API_DOCS_VERSION
-from swagger_coverage_py.results_writers.base_schemas_manager import ApiDocsManagerBase
-from swagger_coverage_py.uri import URI
+from swagger_coverage_metrics.configs import API_DOCS_TYPE, API_DOCS_VERSION
+from swagger_coverage_metrics.results_writers.base_schemas_manager import ApiDocsManagerBase
+from swagger_coverage_metrics.uri import URI
 
 
 class OpenApiSchemasManager(ApiDocsManagerBase):
@@ -26,8 +26,10 @@ class OpenApiSchemasManager(ApiDocsManagerBase):
         }
 
         body_params = self._get_body_params()
+
         if body_params:
             dict_[path_][self._method]["requestBody"] = body_params
+
         return dict_
 
     def _get_schema(self):
@@ -36,4 +38,5 @@ class OpenApiSchemasManager(ApiDocsManagerBase):
             "info": {"title": "Recorded Request"},
             "paths": self._paths(),
         }
+
         return schema_dict

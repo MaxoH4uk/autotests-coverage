@@ -1,15 +1,16 @@
 import json
 import os
 import platform
+import random
 import re
+import string
 import urllib
 
 import yaml
-from faker import Faker
 from requests import Response
 
-from swagger_coverage_py.configs import API_DOCS_FORMAT
-from swagger_coverage_py.uri import URI
+from swagger_coverage_metrics.configs import API_DOCS_FORMAT, REPORTS_DIR
+from swagger_coverage_metrics.uri import URI
 
 
 class ApiDocsManagerBase:
@@ -21,6 +22,7 @@ class ApiDocsManagerBase:
 
     def _get_path_params(self) -> list:
         params_ = []
+
         for key, value in self._uri.uri_params.items():
             params_.append(
                 {
@@ -30,6 +32,7 @@ class ApiDocsManagerBase:
                     "x-example": urllib.parse.unquote(str(value)),
                 }
             )
+
         return params_
 
     def _get_body_params(self):
@@ -47,14 +50,18 @@ class ApiDocsManagerBase:
                 "bool": "boolean",
                 "list": "array",
             }
+
             if isinstance(request_body, dict):
                 properties = {}
+
                 for k, v in request_body.items():
                     value_type = types.get(type(v).__name__, "object")
+
                     if value_type == "string":
                         value = urllib.parse.unquote(str(v))
                     else:
                         value = v
+
                     properties[k] = {k: value, "type": value_type}
 
                 request_body: dict = {
@@ -98,18 +105,22 @@ class ApiDocsManagerBase:
 
     def _get_other_request_params(self, params_key: str, params_in: str) -> list:
         prams_raw = self._other_request_params.get(params_key, {})
+
         if prams_raw:
             params = list(prams_raw.items())
         else:
             params = []
 
         raw = self._uri.raw.split("?")
+
         if len(raw) > 1:
             params += [tuple(x.split("=")) for x in str(raw[1]).split("&")]
+
         if not params:
             return []
 
         params_ = []
+
         for key, value in params:
             params_.append(
                 {
@@ -119,6 +130,7 @@ class ApiDocsManagerBase:
                     "x-example": urllib.parse.unquote(str(value)),
                 }
             )
+
         return params_
 
     def _get_query_params(self) -> list:
@@ -130,13 +142,23 @@ class ApiDocsManagerBase:
     def __get_output_subdir(self):
         return re.match(r"(^\w*)://(.*)", self._uri.host).group(2)
 
+    def __custom_pystr(self, min_chars=5, max_chars=5):
+        length = random.randint(min_chars, max_chars) if min_chars != max_chars else min_chars
+
+        characters = string.ascii_letters + string.digits
+        random_string = ''.join(random.choice(characters) for _ in range(length))
+
+        return random_string
+
     def write_schema(self):
         schema_dict = self._get_schema()
-        rnd = Faker().pystr(min_chars=5, max_chars=5)
+
+        rnd = self.__custom_pystr(min_chars=5, max_chars=5)
         file_name = f"{self._method.upper()} {self._uri.formatted[1::]}".replace(
             "/", "-"
         ).replace(":", "_")
-        path_ = f"swagger-coverage-output/{self.__get_output_subdir()}"
+
+        path_ = os.path.join(str(REPORTS_DIR), self.__get_output_subdir())
         file_path = f"{path_}/{file_name}".split("?")[0]
         file_path = f"{file_path} ({rnd}).{API_DOCS_FORMAT}"
 
@@ -160,7 +182,8 @@ class ApiDocsManagerBase:
                     f"Absolute path length is greater than 256 symbols:\n"
                     f"{abs_path}\n"
                     f"To remove this restriction you can use this guide: "
-                    f"https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation#enable-long-paths-in-windows-10-version-1607-and-later "
+                    f"https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation#enable-long"
+                    f"-paths-in-windows-10-version-1607-and-later "
                 )
             else:
                 raise Exception(
