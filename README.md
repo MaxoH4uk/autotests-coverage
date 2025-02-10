@@ -19,13 +19,13 @@ Swagger/OpenAPI спецификации.
 * Python 3.7+
 * Java JDK 11+ (с указанием переменной JAVA_HOME)
 
-### 1. Установить пакет `swagger-coverage-metrics`.
+### 1. Установить пакет `swagger-coverage-metrics`
 
 ```shell
 pip install swagger-coverage-metrics
 ```
 
-### 2. Указать переменные (Опционально):
+### 2. Указать переменные (Опционально)
 
 ```dotenv
 API_DOCS_TYPE="openapi" # Тип API документации. Возможные значения: "swagger", "openapi". По умолчанию указано "openapi".
@@ -89,7 +89,7 @@ def setup_swagger_coverage():
     reporter.generate_report()
 ```
 
-#### Для снятия метрик нескольких сервисов добавьте инициализацию для каждого сервиса:
+#### Для снятия метрик нескольких сервисов добавьте инициализацию для каждого сервиса
 
 ```python
 import pytest
@@ -131,9 +131,9 @@ def setup_swagger_coverage():
     reporter2.generate_report()
 ```
 
-```
 
-#### Шаги и параметры:
+
+> #### Шаги и параметры
 > `api_name` - Определите имя API. Это имя будет использоваться для формирования отчета.
 > Для API в этом примере будут сгенерированы отчеты с названиями "petstore-coverage.html" и "my-project-coverage.html".
 >
@@ -150,7 +150,7 @@ def setup_swagger_coverage():
 >
 > `auth` - Параметр аутентификации для библиотеки requests. Не указывайте его, если ваш API не требует аутентификации.
 
-### 4. Создайте и разместите файл(ы) swagger-coverage-config.json в вашем проекте
+### 5. Создайте и разместите файл(ы) swagger-coverage-config.json в вашем проекте
 
 ```json
 {
@@ -182,7 +182,7 @@ def setup_swagger_coverage():
 (как они отображаются в документации Swagger) в разделе ignore. Затем эти эндпоинты будут удалены из документации API 
 перед сохранением локально.
 
-Если вам нужно сделать кастомный файл конфигурации для сервисов, то создайте json-файл в папке с конфигурациями
+Если вам нужно сделать кастомный файл конфигурации для сервисов, то создайте json-файл в папке с конфигурациями:
 
 ```json
 {
@@ -246,7 +246,7 @@ def setup_swagger_coverage():
 
 Дополнительные примеры настроек конфигурации вы можете найти в разделе [Configuration options](https://github.com/JamalZeynalov/swagger-coverage#configuration-options) документации.
 
-### 5. Запустите ваши тесты и откройте созданный отчет <api_name>-coverage.html в браузере
+### 6. Запустите ваши тесты и откройте созданный отчет <api_name>-coverage.html в браузере
 
 ## Created by
 
