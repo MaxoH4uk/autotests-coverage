@@ -10,7 +10,13 @@ from typing import List
 import requests
 from filelock import FileLock
 
-from swagger_coverage_metrics.configs import API_DOCS_FORMAT, DEBUG_MODE, REPORTS_DIR, CONFIGS_DIR, TMP_CONFIGS_DIR
+from swagger_coverage_metrics.configs import (
+    API_DOCS_FORMAT,
+    DEBUG_MODE,
+    COVERAGE_REPORTS_DIR,
+    COVERAGE_CONFIGS_DIR,
+    TMP_CONFIGS_DIR
+)
 from swagger_coverage_metrics.docs_writers.api_doc_writer import write_api_doc_to_file
 
 
@@ -26,16 +32,16 @@ class CoverageReporter:
         self.host = host
         self.verify = verify
         self.output_dir = self.__get_output_dir(host=self.host)
-        self.swagger_doc_file = f"{REPORTS_DIR}/swagger-doc-{api_name}.{API_DOCS_FORMAT}"
+        self.swagger_doc_file = f"{COVERAGE_REPORTS_DIR}/swagger-doc-{api_name}.{API_DOCS_FORMAT}"
 
         if not use_custom_config:
             self.coverage_config_file_path = self.__copy_config_file_to_tmp_dir(
-                file_path=os.path.join(CONFIGS_DIR, coverage_config_file_name),
+                file_path=os.path.join(COVERAGE_CONFIGS_DIR, coverage_config_file_name),
                 api_name=api_name
             )
 
         else:
-            self.coverage_config_file_path = os.path.join(CONFIGS_DIR, coverage_config_file_name)
+            self.coverage_config_file_path = os.path.join(COVERAGE_CONFIGS_DIR, coverage_config_file_name)
 
         self.ignored_paths = self.__get_ignored_paths_from_config()
 
@@ -59,7 +65,7 @@ class CoverageReporter:
                 file_data["writers"] = {
                     "html": {
                         "locale": "ru",
-                        "filename": f"{REPORTS_DIR}/{api_name}-coverage.html"
+                        "filename": f"{COVERAGE_REPORTS_DIR}/{api_name}-coverage.html"
                     }
                 }
 
@@ -72,12 +78,12 @@ class CoverageReporter:
     def __get_output_dir(host: str):
         subdir = re.match(r"(^\w*)://(.*)", host).group(2)
 
-        output_dir = os.path.join(str(REPORTS_DIR), subdir)
+        output_dir = os.path.join(str(COVERAGE_REPORTS_DIR), subdir)
 
         if not os.path.exists(output_dir):
             Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-        return os.path.join(str(REPORTS_DIR), subdir)
+        return os.path.join(str(COVERAGE_REPORTS_DIR), subdir)
 
     def __get_ignored_paths_from_config(self) -> List[str]:
         """
@@ -151,11 +157,11 @@ class CoverageReporter:
 
     @staticmethod
     def cleanup_input_files():
-        if not os.path.exists(REPORTS_DIR):
+        if not os.path.exists(COVERAGE_REPORTS_DIR):
             return
 
-        for item in os.listdir(REPORTS_DIR):
-            item_path = os.path.join(REPORTS_DIR, item)
+        for item in os.listdir(COVERAGE_REPORTS_DIR):
+            item_path = os.path.join(COVERAGE_REPORTS_DIR, item)
 
             if os.path.isfile(item_path) or os.path.islink(item_path):
                 os.unlink(item_path)

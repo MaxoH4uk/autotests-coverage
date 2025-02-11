@@ -9,7 +9,7 @@ import urllib
 import yaml
 from requests import Response
 
-from swagger_coverage_metrics.configs import API_DOCS_FORMAT, REPORTS_DIR
+from swagger_coverage_metrics.configs import API_DOCS_FORMAT, COVERAGE_REPORTS_DIR
 from swagger_coverage_metrics.uri import URI
 
 
@@ -158,7 +158,7 @@ class ApiDocsManagerBase:
             "/", "-"
         ).replace(":", "_")
 
-        path_ = os.path.join(str(REPORTS_DIR), self.__get_output_subdir())
+        path_ = os.path.join(str(COVERAGE_REPORTS_DIR), self.__get_output_subdir())
         file_path = f"{path_}/{file_name}".split("?")[0]
         file_path = f"{file_path} ({rnd}).{API_DOCS_FORMAT}"
 
