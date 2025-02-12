@@ -1,7 +1,7 @@
 ![python](https://img.shields.io/badge/python-3.7%2B-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
-# swagger-coverage-metrics
+# autotests-coverage
 
 Этот проект является форком оригинальной библиотеки 
 [swagger-coverage-py](https://github.com/JamalZeynalov/swagger-coverage-py), с внесенными изменениями 
@@ -19,10 +19,10 @@ Swagger/OpenAPI спецификации.
 * Python 3.7+
 * Java JDK 11+ (с указанием переменной JAVA_HOME)
 
-### 1. Установить пакет `swagger-coverage-metrics`
+### 1. Установить пакет `autotests-coverage`
 
 ```shell
-pip install swagger-coverage-metrics
+pip install autotests-coverage
 ```
 
 ### 2. Указать переменные
@@ -256,4 +256,4 @@ def setup_swagger_coverage():
 
 ## License
 
-swagger-coverage-metrics распространяется под версией 2.0 [Apache License](http://www.apache.org/licenses/LICENSE-2.0)
+autotests-coverage распространяется под версией 2.0 [Apache License](http://www.apache.org/licenses/LICENSE-2.0)
