@@ -25,16 +25,18 @@ Swagger/OpenAPI спецификации.
 pip install swagger-coverage-metrics
 ```
 
-### 2. Указать переменные (Опционально)
+### 2. Указать переменные
 
 ```dotenv
 API_DOCS_TYPE="openapi" # Тип API документации. Возможные значения: "swagger", "openapi". По умолчанию указано "openapi".
 API_DOCS_VERSION="3.0.0" # Версия API документации. По умолчанию указано "3.0.0".
 API_DOCS_FORMAT="json" # Формат API документации. Возможные значения: "json", "yaml". По умолчанию указано "json".
 DEBUG_MODE=False # Включение debug-режима. По умолчанию False.
-REPORTS_DIR="C:/repositories/project_name/reports" # Путь до папки, в которую будут сгенерированы отчеты.
-CONFIGS_DIR="C:/repositories/project_name/configs" # Пусть до папки, в которой хранятся файлы конфигураций.
+REPORTS_DIR="C:/repositories/project_name/coverage/reports" # Путь до папки, в которую будут сгенерированы отчеты.
+CONFIGS_DIR="C:/repositories/project_name/coverage/configs" # Пусть до папки, в которой хранятся файлы конфигураций.
 ```
+**ВНИМАНИЕ:** Перед запуском тестов из директории, указанной в переменной "REPORTS_DIR" будут удалены все данные!
+Не нужно указывать в переменной директорию, в которой содержатся нужные данные.
 
 ### 3. Добавить трассировку всех вызовов API с помощью RequestSchemaHandler
 

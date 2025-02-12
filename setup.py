@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="swagger-coverage-metrics",
-    version="0.0.7-alpha.1",
+    name="autotests-coverage",
+    version="0.0.8-alpha.1",
     author="Jamal Zeinalov",
     author_email="jamal.zeynalov@gmail.com",
     description='Python adapter for "swagger-coverage" tool',
