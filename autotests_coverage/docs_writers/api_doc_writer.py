@@ -3,7 +3,7 @@ import json
 import requests
 import yaml
 
-from swagger_coverage_metrics.configs import API_DOCS_FORMAT, API_DOCS_TYPE
+from autotests_coverage.configs import API_DOCS_FORMAT, API_DOCS_TYPE
 
 
 def __delete_ignored_paths_from_json(api_doc_data: requests.Response, paths_to_delete: list) -> dict:

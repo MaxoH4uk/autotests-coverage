@@ -22,7 +22,7 @@ Swagger/OpenAPI спецификации.
 ### 1. Установить пакет `autotests-coverage`
 
 ```shell
-pip install autotests-coverage
+pip install swagger-coverage-metrics
 ```
 
 ### 2. Указать переменные
@@ -41,8 +41,8 @@ CONFIGS_DIR="C:/repositories/project_name/coverage/configs" # Пусть до п
 ### 3. Добавить трассировку всех вызовов API с помощью RequestSchemaHandler
 
 ```python
-from swagger_coverage_metrics.request_schema_handler import RequestSchemaHandler
-from swagger_coverage_metrics.uri import URI
+from autotests_coverage.request_schema_handler import RequestSchemaHandler
+from autotests_coverage.uri import URI
 
 def _send_requests(self, method, path, **kwargs):
     full_url = self.host + path
@@ -67,7 +67,7 @@ def _send_requests(self, method, path, **kwargs):
 
 ```python
 import pytest
-from swagger_coverage_metrics.reporter import CoverageReporter
+from autotests_coverage.reporter import CoverageReporter
 from requests.auth import HTTPBasicAuth
 
 
@@ -95,7 +95,7 @@ def setup_swagger_coverage():
 
 ```python
 import pytest
-from swagger_coverage_metrics.reporter import CoverageReporter
+from autotests_coverage.reporter import CoverageReporter
 from requests.auth import HTTPBasicAuth
 
 
@@ -223,7 +223,7 @@ def setup_swagger_coverage():
 
 ```python
 import pytest
-from swagger_coverage_metrics.reporter import CoverageReporter
+from autotests_coverage.reporter import CoverageReporter
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -256,4 +256,4 @@ def setup_swagger_coverage():
 
 ## License
 
-autotests-coverage распространяется под версией 2.0 [Apache License](http://www.apache.org/licenses/LICENSE-2.0)
+swagger-coverage-metrics распространяется под версией 2.0 [Apache License](http://www.apache.org/licenses/LICENSE-2.0)

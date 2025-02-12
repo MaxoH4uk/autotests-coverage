@@ -2,14 +2,14 @@ from typing import Union
 
 from requests import Response
 
-from swagger_coverage_metrics.configs import API_DOCS_TYPE
-from swagger_coverage_metrics.results_writers.openapi_schemas_manager import (
+from autotests_coverage.configs import API_DOCS_TYPE
+from autotests_coverage.results_writers.openapi_schemas_manager import (
     OpenApiSchemasManager,
 )
-from swagger_coverage_metrics.results_writers.swagger_schemas_manager import (
+from autotests_coverage.results_writers.swagger_schemas_manager import (
     SwaggerSchemasManager,
 )
-from swagger_coverage_metrics.uri import URI
+from autotests_coverage.uri import URI
 
 
 class RequestSchemaHandler:

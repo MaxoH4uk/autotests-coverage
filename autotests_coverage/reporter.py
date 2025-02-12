@@ -10,14 +10,14 @@ from typing import List
 import requests
 from filelock import FileLock
 
-from swagger_coverage_metrics.configs import (
+from autotests_coverage.configs import (
     API_DOCS_FORMAT,
     DEBUG_MODE,
     COVERAGE_REPORTS_DIR,
     COVERAGE_CONFIGS_DIR,
     TMP_CONFIGS_DIR
 )
-from swagger_coverage_metrics.docs_writers.api_doc_writer import write_api_doc_to_file
+from autotests_coverage.docs_writers.api_doc_writer import write_api_doc_to_file
 
 
 class CoverageReporter:

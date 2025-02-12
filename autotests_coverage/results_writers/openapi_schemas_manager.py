@@ -1,8 +1,8 @@
 from requests import Response
 
-from swagger_coverage_metrics.configs import API_DOCS_TYPE, API_DOCS_VERSION
-from swagger_coverage_metrics.results_writers.base_schemas_manager import ApiDocsManagerBase
-from swagger_coverage_metrics.uri import URI
+from autotests_coverage.configs import API_DOCS_TYPE, API_DOCS_VERSION
+from autotests_coverage.results_writers.base_schemas_manager import ApiDocsManagerBase
+from autotests_coverage.uri import URI
 
 
 class OpenApiSchemasManager(ApiDocsManagerBase):

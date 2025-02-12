@@ -9,8 +9,8 @@ import urllib
 import yaml
 from requests import Response
 
-from swagger_coverage_metrics.configs import API_DOCS_FORMAT, COVERAGE_REPORTS_DIR
-from swagger_coverage_metrics.uri import URI
+from autotests_coverage.configs import API_DOCS_FORMAT, COVERAGE_REPORTS_DIR
+from autotests_coverage.uri import URI
 
 
 class ApiDocsManagerBase:
