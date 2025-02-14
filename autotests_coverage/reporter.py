@@ -21,6 +21,8 @@ from autotests_coverage.docs_writers.api_doc_writer import write_api_doc_to_file
 
 
 class CoverageReporter:
+    CoverageReporter.__check_required_variables_values()
+
     def __init__(
         self,
         api_name: str,
@@ -44,6 +46,14 @@ class CoverageReporter:
             self.coverage_config_file_path = os.path.join(COVERAGE_CONFIGS_DIR, coverage_config_file_name)
 
         self.ignored_paths = self.__get_ignored_paths_from_config()
+
+    @staticmethod
+    def __check_required_variables_values():
+        if COVERAGE_REPORTS_DIR is None:
+            raise ValueError("Укажите значение переменной 'COVERAGE_REPORTS_DIR'.")
+
+        if COVERAGE_CONFIGS_DIR is None:
+            raise ValueError("Укажите значение переменной 'COVERAGE_CONFIGS_DIR'.")
 
     def __copy_config_file_to_tmp_dir(self, file_path: str, api_name: str):
         tmp_file_path = os.path.join(TMP_CONFIGS_DIR, f"swagger-coverage-config-{api_name}.json")
@@ -83,7 +93,7 @@ class CoverageReporter:
         if not os.path.exists(output_dir):
             Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-        return os.path.join(str(COVERAGE_REPORTS_DIR), subdir)
+        return output_dir
 
     def __get_ignored_paths_from_config(self) -> List[str]:
         """
@@ -157,18 +167,18 @@ class CoverageReporter:
 
     @staticmethod
     def cleanup_input_files():
-        if not os.path.exists(COVERAGE_REPORTS_DIR):
-            return
+        if os.path.exists(COVERAGE_REPORTS_DIR):
+            for item in os.listdir(COVERAGE_REPORTS_DIR):
+                item_path = os.path.join(COVERAGE_REPORTS_DIR, item)
 
-        for item in os.listdir(COVERAGE_REPORTS_DIR):
-            item_path = os.path.join(COVERAGE_REPORTS_DIR, item)
+                if os.path.isfile(item_path) or os.path.islink(item_path):
+                    os.unlink(item_path)
+                elif os.path.isdir(item_path):
+                    shutil.rmtree(item_path, ignore_errors=True)
 
-            if os.path.isfile(item_path) or os.path.islink(item_path):
-                os.unlink(item_path)
-            elif os.path.isdir(item_path):
-                shutil.rmtree(item_path, ignore_errors=True)
+        else:
+            Path(COVERAGE_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
 
         shutil.rmtree(TMP_CONFIGS_DIR, ignore_errors=True)
 
-        if not os.path.exists(TMP_CONFIGS_DIR):
-            Path(TMP_CONFIGS_DIR).mkdir(parents=True, exist_ok=True)
+        Path(TMP_CONFIGS_DIR).mkdir(parents=True, exist_ok=True)
