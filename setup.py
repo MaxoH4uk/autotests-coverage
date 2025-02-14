@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="autotests-coverage",
-    version="0.0.8-alpha.1",
+    version="0.0.9-alpha.1",
     author="Jamal Zeinalov",
     author_email="jamal.zeynalov@gmail.com",
     description='Python adapter for "swagger-coverage" tool',
