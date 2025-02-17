@@ -9,12 +9,14 @@ import urllib
 import yaml
 from requests import Response
 
-from autotests_coverage.configs import API_DOCS_FORMAT, COVERAGE_REPORTS_DIR
+from autotests_coverage.config import EnvConfig
 from autotests_coverage.uri import URI
 
 
 class ApiDocsManagerBase:
     def __init__(self, uri: URI, response: Response, kwargs: dict, method: str = None):
+        self.variables = EnvConfig.get_variables()
+
         self._uri = uri
         self._method = method
         self._response: Response = response
@@ -158,19 +160,19 @@ class ApiDocsManagerBase:
             "/", "-"
         ).replace(":", "_")
 
-        path_ = os.path.join(str(COVERAGE_REPORTS_DIR), self.__get_output_subdir())
+        path_ = os.path.join(str(self.variables.coverage_reports_dir), self.__get_output_subdir())
         file_path = f"{path_}/{file_name}".split("?")[0]
-        file_path = f"{file_path} ({rnd}).{API_DOCS_FORMAT}"
+        file_path = f"{file_path} ({rnd}).{self.variables.api_docs_format}"
 
         try:
             with open(file_path, "w+") as file:
-                if API_DOCS_FORMAT == "yaml":
+                if self.variables.api_docs_format == "yaml":
                     file.write(yaml.safe_dump(schema_dict, indent=4, sort_keys=False))
-                elif API_DOCS_FORMAT == "json":
+                elif self.variables.api_docs_format == "json":
                     file.write(json.dumps(schema_dict, indent=4))
                 else:
                     raise Exception(
-                        f"Unexpected docs format: {API_DOCS_FORMAT}. Valid formats: json, yaml"
+                        f"Unexpected docs format: {self.variables.api_docs_format}. Valid formats: json, yaml"
                     )
 
         except FileNotFoundError as e:

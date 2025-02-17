@@ -21,6 +21,8 @@ setup(
     install_requires=[
         "requests==2.32.0",
         "setuptools==70.0.0",
+        "PyYAML>=6.0",
+        "pydantic==2.6.1",
         "filelock>=3.11.0"
     ],
     python_requires=">=3.7",

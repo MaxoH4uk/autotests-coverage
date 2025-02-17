@@ -10,19 +10,11 @@ from typing import List
 import requests
 from filelock import FileLock
 
-from autotests_coverage.configs import (
-    API_DOCS_FORMAT,
-    DEBUG_MODE,
-    COVERAGE_REPORTS_DIR,
-    COVERAGE_CONFIGS_DIR,
-    TMP_CONFIGS_DIR
-)
+from autotests_coverage.config import EnvConfig
 from autotests_coverage.docs_writers.api_doc_writer import write_api_doc_to_file
 
 
 class CoverageReporter:
-    CoverageReporter.__check_required_variables_values()
-
     def __init__(
         self,
         api_name: str,
@@ -31,32 +23,30 @@ class CoverageReporter:
         use_custom_config: bool = False,
         verify: bool = True
     ):
+        self.variables = EnvConfig.get_variables()
+
         self.host = host
         self.verify = verify
         self.output_dir = self.__get_output_dir(host=self.host)
-        self.swagger_doc_file = f"{COVERAGE_REPORTS_DIR}/swagger-doc-{api_name}.{API_DOCS_FORMAT}"
+        self.swagger_doc_file = (f"{self.variables.coverage_reports_dir}/swagger-doc-{api_name}."
+                                 f"{self.variables.api_docs_format}")
 
         if not use_custom_config:
             self.coverage_config_file_path = self.__copy_config_file_to_tmp_dir(
-                file_path=os.path.join(COVERAGE_CONFIGS_DIR, coverage_config_file_name),
+                file_path=os.path.join(self.variables.coverage_configs_dir, coverage_config_file_name),
                 api_name=api_name
             )
 
         else:
-            self.coverage_config_file_path = os.path.join(COVERAGE_CONFIGS_DIR, coverage_config_file_name)
+            self.coverage_config_file_path = os.path.join(
+                self.variables.coverage_configs_dir,
+                coverage_config_file_name
+            )
 
         self.ignored_paths = self.__get_ignored_paths_from_config()
 
-    @staticmethod
-    def __check_required_variables_values():
-        if COVERAGE_REPORTS_DIR is None:
-            raise ValueError("Укажите значение переменной 'COVERAGE_REPORTS_DIR'.")
-
-        if COVERAGE_CONFIGS_DIR is None:
-            raise ValueError("Укажите значение переменной 'COVERAGE_CONFIGS_DIR'.")
-
     def __copy_config_file_to_tmp_dir(self, file_path: str, api_name: str):
-        tmp_file_path = os.path.join(TMP_CONFIGS_DIR, f"swagger-coverage-config-{api_name}.json")
+        tmp_file_path = os.path.join(self.variables.tmp_configs_dir, f"swagger-coverage-config-{api_name}.json")
 
         lock_path = file_path + ".lock"
         lock = FileLock(lock_path)
@@ -65,7 +55,7 @@ class CoverageReporter:
             if not os.path.isfile(tmp_file_path):
                 tmp_file_path = shutil.copy(
                     file_path, os.path.join(
-                        TMP_CONFIGS_DIR, f"swagger-coverage-config-{api_name}.json"
+                        self.variables.tmp_configs_dir, f"swagger-coverage-config-{api_name}.json"
                     )
                 )
 
@@ -75,7 +65,7 @@ class CoverageReporter:
                 file_data["writers"] = {
                     "html": {
                         "locale": "ru",
-                        "filename": f"{COVERAGE_REPORTS_DIR}/{api_name}-coverage.html"
+                        "filename": f"{self.variables.coverage_reports_dir}/{api_name}-coverage.html"
                     }
                 }
 
@@ -84,11 +74,10 @@ class CoverageReporter:
 
             return tmp_file_path
 
-    @staticmethod
-    def __get_output_dir(host: str):
+    def __get_output_dir(self, host: str):
         subdir = re.match(r"(^\w*)://(.*)", host).group(2)
 
-        output_dir = os.path.join(str(COVERAGE_REPORTS_DIR), subdir)
+        output_dir = os.path.join(str(self.variables.coverage_reports_dir), subdir)
 
         if not os.path.exists(output_dir):
             Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -159,7 +148,7 @@ class CoverageReporter:
             command.extend(["-c", self.coverage_config_file_path])
 
         # Suppress all output if not in debug mode
-        if not DEBUG_MODE:
+        if not self.variables.debug_mode:
             with open(os.devnull, 'w') as devnull:
                 subprocess.run(command, stdout=devnull, stderr=devnull)
         else:
@@ -167,9 +156,11 @@ class CoverageReporter:
 
     @staticmethod
     def cleanup_input_files():
-        if os.path.exists(COVERAGE_REPORTS_DIR):
-            for item in os.listdir(COVERAGE_REPORTS_DIR):
-                item_path = os.path.join(COVERAGE_REPORTS_DIR, item)
+        variables = EnvConfig.get_variables()
+
+        if os.path.exists(variables.coverage_reports_dir):
+            for item in os.listdir(variables.coverage_reports_dir):
+                item_path = os.path.join(variables.coverage_reports_dir, item)
 
                 if os.path.isfile(item_path) or os.path.islink(item_path):
                     os.unlink(item_path)
@@ -177,8 +168,8 @@ class CoverageReporter:
                     shutil.rmtree(item_path, ignore_errors=True)
 
         else:
-            Path(COVERAGE_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
+            Path(variables.coverage_reports_dir).mkdir(parents=True, exist_ok=True)
 
-        shutil.rmtree(TMP_CONFIGS_DIR, ignore_errors=True)
+        shutil.rmtree(variables.tmp_configs_dir, ignore_errors=True)
 
-        Path(TMP_CONFIGS_DIR).mkdir(parents=True, exist_ok=True)
+        Path(variables.tmp_configs_dir).mkdir(parents=True, exist_ok=True)

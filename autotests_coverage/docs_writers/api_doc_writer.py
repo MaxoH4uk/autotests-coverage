@@ -3,7 +3,7 @@ import json
 import requests
 import yaml
 
-from autotests_coverage.configs import API_DOCS_FORMAT, API_DOCS_TYPE
+from autotests_coverage.config import EnvConfig
 
 
 def __delete_ignored_paths_from_json(api_doc_data: requests.Response, paths_to_delete: list) -> dict:
@@ -27,9 +27,11 @@ def __delete_ignored_paths_from_yaml(api_doc_data: requests.Response, paths_to_d
 
 
 def __write_api_doc_to_json(file_path: str, api_doc_data: requests.Response, paths_to_delete: list):
+    variables = EnvConfig.get_variables()
+
     api_doc_data = __delete_ignored_paths_from_json(api_doc_data, paths_to_delete)
 
-    if API_DOCS_TYPE == "swagger" and not api_doc_data.get("swagger", None):
+    if variables.api_docs_type == "swagger" and not api_doc_data.get("swagger", None):
         api_doc_data["swagger"] = "2.0"
 
     with open(file_path, "w+") as file:
@@ -37,9 +39,11 @@ def __write_api_doc_to_json(file_path: str, api_doc_data: requests.Response, pat
 
 
 def __write_api_doc_to_yaml(file_path: str, api_doc_data: requests.Response, paths_to_delete: list):
+    variables = EnvConfig.get_variables()
+
     data = __delete_ignored_paths_from_yaml(api_doc_data, paths_to_delete)
 
-    if API_DOCS_TYPE == "swagger" and not data.get("swagger", None):
+    if variables.api_docs_type == "swagger" and not data.get("swagger", None):
         data["swagger"] = "2.0"
 
     with open(file_path, "w+") as file:
@@ -47,7 +51,9 @@ def __write_api_doc_to_yaml(file_path: str, api_doc_data: requests.Response, pat
 
 
 def write_api_doc_to_file(file_path: str, api_doc_data: requests.Response, paths_to_delete: list):
-    if API_DOCS_FORMAT == "json":
+    variables = EnvConfig.get_variables()
+
+    if variables.api_docs_format == "json":
         __write_api_doc_to_json(file_path, api_doc_data, paths_to_delete)
     else:
         __write_api_doc_to_yaml(file_path, api_doc_data, paths_to_delete)

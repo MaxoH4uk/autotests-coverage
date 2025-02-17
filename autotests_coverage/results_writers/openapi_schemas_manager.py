@@ -1,6 +1,5 @@
 from requests import Response
 
-from autotests_coverage.configs import API_DOCS_TYPE, API_DOCS_VERSION
 from autotests_coverage.results_writers.base_schemas_manager import ApiDocsManagerBase
 from autotests_coverage.uri import URI
 
@@ -34,7 +33,7 @@ class OpenApiSchemasManager(ApiDocsManagerBase):
 
     def _get_schema(self):
         schema_dict = {
-            API_DOCS_TYPE: API_DOCS_VERSION,
+            self.variables.api_docs_type: self.variables.api_docs_version,
             "info": {"title": "Recorded Request"},
             "paths": self._paths(),
         }
