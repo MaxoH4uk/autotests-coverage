@@ -1,5 +1,5 @@
-requests==2.32.0
-setuptools==70.0.0
-filelock==3.11.0
-PyYAML>=6.0
-pydantic==2.6.1
+requests>=2.32.3
+setuptools>=70.0.0
+filelock>=3.18.0
+PyYAML>=6.0.2
+pydantic>=2.11.1
